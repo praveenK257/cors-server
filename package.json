@@ -1,0 +1,30 @@
+{
+  "name": "cors-server",
+  "version": "1.0.0",
+  "description": "Simple CORS proxy server to communicate with services directly from the browser",
+  "main": "dist/server.js",
+  "scripts": {
+    "test": "test server.js",
+    "start": "nodemon 'tsc && node dist/server.js'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/praveenK257/cors-server.git"
+  },
+  "keywords": [
+    "CORS",
+    "server",
+    "proxy"
+  ],
+  "author": "praveenK257",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/praveenK257/cors-server/issues"
+  },
+  "homepage": "https://github.com/praveenK257/cors-server#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  }
+}
