@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "Simple CORS proxy server to communicate with services directly from the browser",
   "main": "dist/server.js",
+  "type": "module",
   "scripts": {
     "test": "test server.js",
-    "start": "nodemon 'tsc && node dist/server.js'"
+    "start": "npx tsc && node dist/server.js"
   },
   "repository": {
     "type": "git",
