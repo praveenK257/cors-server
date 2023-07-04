@@ -31,14 +31,20 @@ export const handleProxyRequest = (req: Request, proxyResp: Response) => {
     };
     
     const handleResponse = (response: IncomingMessage) => {
-        let data;
+        let data, responseWriter = 'end';
         response.on('data', (chunk) => {
             data = chunk;
         });
 
         response.on('end', () => {
+            let headers = response.headers
             let status = response.statusCode
+            proxyResp.statusCode = status 
+            proxyResp.contentType(response.headers['content-type'])
             
+            delete headers['set-cookie'];
+            delete headers['set-cookie2'];
+
             // Client error
             if( status >= 400 && status < 500 ){
 
@@ -48,17 +54,24 @@ export const handleProxyRequest = (req: Request, proxyResp: Response) => {
                 
             }   
             // Redirection
+            // TODO :: Handle redirection and fetch content of the redirected page
             else if(status == 302){
+                addCORSHeaders(req, proxyResp, {location: headers.location})
+                proxyResp.writeHead(200, { 'Content-Type': 'application/json' });
+                return proxyResp.end(JSON.stringify({
+                    code: "REDIRECTED",
+                    message: "Your request returned 302",
+                    redirect_url: headers.location
 
+                }))
             }
             // Success
             else if(status >= 200 && status < 300){
 
             }
 
-            proxyResp.statusCode = status 
-            proxyResp.contentType(response.headers['content-type'])
-            addCORSHeaders(req, proxyResp, response.headers)
+            proxyResp.contentType(headers['content-type'])
+            addCORSHeaders(req, proxyResp, headers)
             proxyResp.end(data)
         });
 
