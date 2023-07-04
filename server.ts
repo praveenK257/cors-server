@@ -1,28 +1,29 @@
-import http from "http";
-import { IncomingMessage, ServerResponse } from 'http';
+import express, {Express, Request, Response} from 'express';
+import dotenv from 'dotenv';
 import fs from 'fs';
-import { handleRequests } from "./src/responseHandler.js";
+import { handleProxyRequest } from "./src/responseHandler.js";
 
-const server = http.createServer( (req: IncomingMessage, res: ServerResponse) => {
-    const url = req.url
+dotenv.config();
 
-    switch(url){
-        case '/' || '': {
-            res.writeHead(200, { 'Content-Type':'text/html'});
-            const html = fs.readFileSync('./index.html');
-            res.end(html);
-            break
-        }
-        default: {
-            handleRequests(req, res)
-        } 
-    }
+const app : Express = express();
+const port : string | number = process.env.PORT || 8081;
+
+app.get('/', (req: Request, res: Response) => {
+  res.writeHead(200, { 'Content-Type':'text/html'});
+  const html = fs.readFileSync('./index.html');
+  res.end(html);
 });
 
-server.listen(8084, function(){
-    console.log("Server is listening on port 8084");
-});
+app.get("/proxy", handleProxyRequest)
 
-server.on('error', function(err){
-    console.log(err)
+app.get("*", (req: Request, res: Response) => {
+    res.status(404)
+    res.json({
+        code: "RESOURCE_NOT_FOUND",
+        message: "The resource you are looking for is not available"
+    })
 })
+
+app.listen(port, () => {
+  console.log(`CORS Proxy Server started at port ${port}`);
+});
