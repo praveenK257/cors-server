@@ -6,7 +6,7 @@ import { handleProxyRequest } from "./src/responseHandler.js";
 dotenv.config();
 
 const app : Express = express();
-const port : string | number = process.env.PORT || 8081;
+const port : string | number = process.env.PORT || 7443;
 
 app.get('/', (req: Request, res: Response) => {
   res.writeHead(200, { 'Content-Type':'text/html'});
